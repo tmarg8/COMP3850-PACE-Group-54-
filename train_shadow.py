@@ -19,7 +19,7 @@ def build_siamese_autoencoder(embedding_dim):
     # Shared encoder
     encoder_input = Input(shape=(embedding_dim,))
     x = layers.Dense(50, activity_regularizer=regularizers.l1(0.01))(encoder_input)
-    x = layers.LeakyReLU(negative_slope=0.01)(x)
+    x = layers.LeakyReLU(0.01)(x)
     encoder_output = layers.Dense(embedding_dim, activation="relu")(x)
     encoder = Model(encoder_input, encoder_output, name="shadow_encoder")
 
