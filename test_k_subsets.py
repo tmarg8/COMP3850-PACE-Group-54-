@@ -28,9 +28,9 @@ def generate_shadow_subsets(
         x1_data: ClinicalBERT embeddings for patient note 1
         x2_data: ClinicalBERT embeddings for patient note 2
         y_data: Linkage match labels (1.0 or 0.0)
-        k (int): Number of shadow models to train
-        sample_size (int): Number of record pairs per shadow model
-        train_ratio (float): Ratio of pairs used for training vs testing
+        k (int): Number of shadow models to train (set to 5 if unspecified)
+        sample_size (int): Number of record pairs per shadow model (set to 8,000 if unspecified)
+        train_ratio (float): Ratio of pairs used for training vs testing (set to 0.7 if unspecified)
 
     Returns:
         list of dict: K distinct dictionary subsets containing train and test partitions
@@ -88,5 +88,22 @@ def generate_shadow_subsets(
         }
         subsets.append(subset)
 
-        print(f"Successfully generated {len(subsets)} shadow model partitions. \n")
-        return subsets
+    print(f"Successfully generated {len(subsets)} shadow model partitions. \n")
+    return subsets
+
+### STEP 2: RUN IT AND TEST
+if __name__ == "__main__":
+    print("Loading shadow embeddings...")
+    x1_shadow = np.load("Embeddings/x1_shadow_train.npy")
+    x2_shadow = np.load("Embeddings/x2_shadow_train.npy")
+    y_shadow = np.load("Embeddings/y_shadow_train.npy")
+
+    # Generate 5 shadow subsets
+    shadow_subsets = generate_shadow_subsets(
+        x1_data=x1_shadow,
+        x2_data=x2_shadow,
+        y_data=y_shadow,
+        k=5,
+        sample_size=8000,
+        train_ratio=0.7
+    )
