@@ -1,0 +1,68 @@
+=====================================================================
+ Candid Consulting (Group 54): End-to-End MIA Security Test Pipeline 
+=====================================================================
+
+[TC-SEC-01] Verifying 12 Embedding Arrays & Data Isolation...
+  ↳ Target Train: (32000, 768) | Target Test: (8000, 768)
+  ↳ Shadow Train: (32000, 768) | Shadow Test: (8000, 768)
+  ↳ [PASS] All 12 files verified (768-dim float32, zero NaN/Inf).
+
+[TC-SEC-02] Training Target Linkage Model (Victim Baseline)...
+  ↳ Target Train Acc: 82.27% | Target Test Acc: 77.78% | F1: 0.7758
+  ↳ Target Generalization Gap (Train - Test): +4.50%
+  ↳ Balanced Target Attack Evaluation Set Compiled: (16000, 6) (8,000 IN / 8,000 OUT)
+  ↳ [PASS] Completed in 33.4s.
+
+[TC-SEC-03] Generating K=10 Shadow Subsets & Training Shadow Models...
+
+--- GENERATING 10 SHADOW SUBSETS ---
+Total Shadow Pool: 32000 pairs
+Target Size per Shadow Model: 8000 pairs
+ ↳ Train Pairs (Members / IN):     5600
+ ↳ Test Pairs (Non-Members / OUT): 2400
+Successfully generated 10 shadow model partitions.
+
+  ↳ Shadow Model  1/10 | Train Acc: 82.29% | Test Acc: 79.12% | F1: 0.7838 (5.8s)
+  ↳ Shadow Model  2/10 | Train Acc: 84.27% | Test Acc: 82.04% | F1: 0.8127 (5.9s)
+  ↳ Shadow Model  3/10 | Train Acc: 83.07% | Test Acc: 77.00% | F1: 0.7781 (6.0s)
+  ↳ Shadow Model  4/10 | Train Acc: 81.66% | Test Acc: 78.71% | F1: 0.7879 (6.6s)
+  ↳ Shadow Model  5/10 | Train Acc: 82.12% | Test Acc: 77.17% | F1: 0.7741 (6.0s)
+  ↳ Shadow Model  6/10 | Train Acc: 80.38% | Test Acc: 77.50% | F1: 0.7688 (6.0s)
+  ↳ Shadow Model  7/10 | Train Acc: 82.41% | Test Acc: 81.33% | F1: 0.8143 (6.0s)
+  ↳ Shadow Model  8/10 | Train Acc: 82.75% | Test Acc: 78.54% | F1: 0.7880 (6.7s)
+  ↳ Shadow Model  9/10 | Train Acc: 81.96% | Test Acc: 79.25% | F1: 0.7812 (6.1s)
+  ↳ Shadow Model 10/10 | Train Acc: 84.43% | Test Acc: 80.46% | F1: 0.7971 (6.0s)
+  ↳ Mean Shadow Test Acc: 79.11% (±1.72%)
+  ↳ [PASS] Shadow model training log saved to results/shadow_models_training_log.csv
+
+[TC-SEC-04] Running Statistical Hypothesis Tests on Extracted Signals (K=10 Pool)...
+       Feature  Member_IN_Mean  Member_IN_Std  NonMember_OUT_Mean  NonMember_OUT_Std  Diff_(IN-OUT)  t_statistic      p_value
+Confidence (s)          0.4843         0.3311              0.4951             0.3340        -0.0107      -3.5345 4.089786e-04
+  BCE_Loss (L)          0.3962         0.4966              0.4530             0.5921        -0.0568     -11.3787 5.849856e-30
+    Margin (M)          0.2987         0.1438              0.3017             0.1434        -0.0031      -2.3363 1.948135e-02
+   Entropy (H)          0.4348         0.1972              0.4300             0.1996         0.0048       2.6376 8.353192e-03
+  ↳ [PASS] Feature distribution stats saved to results/feature_distribution_stats.csv
+
+[TC-SEC-05 & TC-SEC-06] Evaluating Attack Classifier on Target Model across K = 1, 5, 10...
+
+--- TARGET MODEL ATTACK EVALUATION SUMMARY (TC-SEC-05 & TC-SEC-06) ---
+ K_Shadow_Models Attack_Classifier  Attack_Train_Rows  Target_Attack_Acc  Precision  Recall_(TPR)  F1_Score  ROC_AUC  TPR@FPR=0.01  TPR@FPR=0.05
+               1      RandomForest               4800             0.5045     0.5045        0.5054    0.5049   0.5056        0.0088        0.0469
+               1    MLP_Classifier               4800             0.5138     0.5158        0.4512    0.4814   0.5244        0.0088        0.0563
+               5      RandomForest              24000             0.5162     0.5119        0.6986    0.5908   0.5139        0.0084        0.0462
+               5    MLP_Classifier              24000             0.5226     0.5132        0.8786    0.6480   0.5226        0.0112        0.0580
+              10      RandomForest              48000             0.5184     0.5135        0.7029    0.5934   0.5201        0.0085        0.0473
+              10    MLP_Classifier              48000             0.5258     0.5211        0.6368    0.5731   0.5301        0.0116        0.0564
+
+Target Attack Confusion Matrix (K=10, RandomForest, Balanced 16,000 pairs):
+  True Positives (Members Caught):     5623
+  False Positives (False Alarms):      5328
+  True Negatives (Non-Members Correct):2672
+  False Negatives (Members Missed):    2377
+
+[PLOTS SAVED] Generated 3 high-res plots in 'results/' folder:
+  1. results/multi_k_shadow_roc_comparison.png
+  2. results/feature_distribution_comparison.png
+  3. results/target_mia_confusion_matrix.png
+
+[ALL TESTS COMPLETE] Total pipeline execution time: 105.9s.
