@@ -81,9 +81,9 @@ Once the pipeline completes, open the `results/` folder in the repository root. 
 
 The following CSV files are generated:
 
-- `results/shadow_models_training_log.csv` — per-shadow-model training accuracy, F1, and runtime.
-- `results/feature_distribution_stats.csv` — mean/std statistics for membership features (confidence, loss, margin, entropy).
-- `results/shadow_k_sensitivity_analysis.csv` — attack performance across K = 1, 5, and 10 shadow models.
+- `results/shadow_models_training_log.csv` - per-shadow-model training accuracy, F1, and runtime.
+- `results/feature_distribution_stats.csv` - mean/std statistics for membership features (confidence, loss, margin, entropy).
+- `results/shadow_k_sensitivity_analysis.csv` - attack performance across K = 1, 5, and 10 shadow models.
 
 These can be opened in Excel, Google Sheets, VS Code, or any spreadsheet viewer.
 
@@ -105,9 +105,9 @@ This file contains the final attack metrics and the confusion matrix summary for
 
 The repository saves these figures in `results/`:
 
-- `results/multi_k_shadow_roc_comparison.png` — ROC curves for K = 1, 5, and 10.
-- `results/feature_distribution_comparison.png` — distribution of confidence and loss for member vs non-member samples.
-- `results/target_mia_confusion_matrix.png` — confusion matrix for the final target-model attack.
+- `results/multi_k_shadow_roc_comparison.png` - ROC curves for K = 1, 5, and 10.
+- `results/feature_distribution_comparison.png` - distribution of confidence and loss for member vs non-member samples.
+- `results/target_mia_confusion_matrix.png` - confusion matrix for the final target-model attack.
 
 Open these files in any image viewer, browser preview, or GitHub file viewer to inspect the model behaviour visually.
 
@@ -139,12 +139,5 @@ Stores the generated evidence and evaluation outputs from the attack pipeline, i
 Excludes local environment and generated data files such as virtual environments, caches, and large numpy arrays.
 
 ## Discussion of findings
-
-The experimental findings are captured in the generated CSV summaries and plots inside the `results/` directory. The main outputs show how the attack performance changes as the number of shadow models increases, and whether member samples can be distinguished from non-member samples via confidence, loss, margin, and entropy signals.
-
-To interpret the results:
-- Higher ROC AUC and TPR@FPR values indicate stronger membership leakage.
-- Large differences in feature distributions between member and non-member samples suggest the model leaks membership information.
-- The confusion matrix and sensitivity tables show which attack settings are most effective against the target model.
 
 If you want to reproduce or extend the analysis, rerun `python run_mia_attack.py` after placing the supplied embedding files into `Embeddings/` and ensuring the environment is set up.
